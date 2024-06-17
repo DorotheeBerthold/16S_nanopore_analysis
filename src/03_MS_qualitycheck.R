@@ -74,9 +74,6 @@ skyline_library <- skyline_library[!skyline_library$Molecule %in% molecules,]
 write_csv(skyline_library, "results/molecule_quantification_filtered_DB044.csv")
 
 
-# make long df
-skyline_long <- skyline_library[,c(1:2, 5:6)]
-
 #plot RT per molecule
 ggplot(skyline_long, aes(Molecule, Best.Retention.Time)) + 
   geom_boxplot(outliers = F) +
