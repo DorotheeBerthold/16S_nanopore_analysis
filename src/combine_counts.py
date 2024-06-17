@@ -1,4 +1,3 @@
-
 import pandas as pd
 import glob
 
@@ -9,7 +8,7 @@ files = sorted(glob.glob("barcode*_filtered_rel-abundance.tsv"))
 combined_df = pd.DataFrame()
 
 # Define the metadata columns
-metadata_cols = ["tax_id", "species", "genus", "family", "order", "class", "phylum", "clade", "superkingdom", "subspecies",$
+metadata_cols = ["tax_id", "species", "genus", "family", "order", "class", "phylum", "clade", "superkingdom", "subspecies", "species subgroup", "species group"]
 
 # Iterate through each file
 for file in files:
@@ -19,6 +18,10 @@ for file in files:
     # Read the current TSV file
     df = pd.read_csv(file, sep="\t")
 
+    # Remove the "abundance" column if it exists
+    if "abundance" in df.columns:
+        df.drop(columns=["abundance"], inplace=True)
+
     # Rename the "estimated counts" column to the barcode
     df = df.rename(columns={"estimated counts": barcode})
 
@@ -26,11 +29,8 @@ for file in files:
     if combined_df.empty:
         combined_df = df
     else:
-        # Merge the current DataFrame with the combined DataFrame on the "tax_id" column
-        combined_df = pd.merge(combined_df, df, on=["tax_id"], how="outer", suffixes=('', '_dup'))
-
-        # Resolve duplicated columns by keeping only one of the duplicates
-        combined_df = combined_df.loc[:,~combined_df.columns.duplicated()]
+        # Merge the current DataFrame with the combined DataFrame on the metadata columns
+        combined_df = pd.merge(combined_df, df, on=metadata_cols, how="outer")
 
 # Ensure all metadata columns are included in the combined DataFrame
 for col in metadata_cols:
@@ -43,4 +43,3 @@ combined_df = combined_df[metadata_cols + barcode_cols]
 
 # Save the combined DataFrame to a CSV file
 combined_df.to_csv("combined_estimated_counts.csv", index=False)
-
