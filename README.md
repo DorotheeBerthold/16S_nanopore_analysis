@@ -22,7 +22,7 @@ This workflow relies on the following tools and packages:
   - `bash`
   - `awk`, `sed`, `grep` (standard GNU command-line tools)
   - `cutadapt` -- create own venv with cutadapt
-  -  `emu` -- create own venv with emu [githublink] (https://github.com/treangenlab/emu)
+  -  `emu` -- create own venv with emu (https://github.com/treangenlab/emu)
 - **R** (version ≥ 4.0.0) with the following packages:
   - `tidyverse`
   - `data.table`
